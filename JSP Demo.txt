@@ -1,0 +1,347 @@
+<%@ page import="java.util.*" %>
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>hello from html</h1>
+	<%="<h1>hello from jsp</h1>"%>
+	
+	<%
+	int x =10;
+	%>
+	
+	<input type = "text" value ="<%=x%>"><br>
+	
+	<%
+		for(int i=0;i<5;i++){
+			out.println("i = "+i+"<br>");
+			}
+	%>
+	
+		The current date is <%= new Date() %>
+		
+		
+	<%--
+		JSP Implicit Objects
+		out-JspWriter
+		application-ServletConfig
+		page-object
+		pageContext-PageContext
+		Exception-Throwable
+		Request-HttpServletRequest
+		Response-HttpServletResponse
+	
+	 --%>
+	 
+	 <form action="">
+	 	enter name: <input type="text" name="fname">
+	 	<input type ="submit" name="click" value="click me">
+	 </form>
+	 
+	 <%
+	 	if (request.getParameter("click") != null){
+	 		out.println("hello "+request.getParameter("fname"));
+	 	}
+	 
+	 %>
+	 
+	
+	<%@include file ="footer.html"%>
+
+</body>
+</html>
+
+<div align="center">
+	Im a footer
+</div>
+
+
+dEMO2
+----------------------------------------------------------
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action ="" method ="post">
+		Enter Name <input type="text" name="fname"><br>
+		Enter Age <input type="number" name="fage"><br>
+		Enter Email <input type="text" name="femail"><br>
+		Enter Password <input type="password" name="fpswrd"><br>
+		Gender <input type="radio" name="fgender" value="female">female
+		       <input type ="radio" name="fgender" value="male">male<br>
+		Hobbies<input type="checkbox" name="fhobby" value="reading">reading
+			   <input type="checkbox" name="fhobby" value="video games">video games
+			   <input type="checkbox" name="fhobby" value="blogging">blogging <br>	
+		Country<select name="country">
+				<option value="select" > select country</option>
+				<option value="India" > India</option>
+				<option value="Us" > US</option>
+				<option value="UK" >UK</option>
+				<option value="others" > others</option>
+			</select>
+			<input type ="submit" name= "register" value= "Register details">
+	</form>
+	
+	
+	<% if(request.getParameter("register")!=null) { %>
+	
+		<jsp:useBean id="user" class="com.user" scope="request"></jsp:useBean>
+		<jsp:setProperty property="*" name="user"/>
+		
+		<jsp:forward page="registerServlet"></jsp:forward>
+		
+	<%}%>
+
+</body>
+</html>
+
+
+package com;
+
+public class user {
+	private String fname;
+	private int fage;
+	private String femail;
+	private String fpswrd;
+	private String fgender;
+	private String fhobby;
+	private String fcountry;
+	
+	
+	public user() {
+		super();
+		
+	}
+	public String getFname() {
+		return fname;
+	}
+	public void setFname(String fname) {
+		this.fname = fname;
+	}
+	public int getFage() {
+		return fage;
+	}
+	public void setFage(int fage) {
+		this.fage = fage;
+	}
+	public String getFemail() {
+		return femail;
+	}
+	public void setFemail(String femail) {
+		this.femail = femail;
+	}
+	public String getFpswrd() {
+		return fpswrd;
+	}
+	public void setFpswrd(String fpswrd) {
+		this.fpswrd = fpswrd;
+	}
+	public String getFgender() {
+		return fgender;
+	}
+	public void setFgender(String fgender) {
+		this.fgender = fgender;
+	}
+	public String getFhobby() {
+		return fhobby;
+	}
+	public void setFhobby(String fhobby) {
+		this.fhobby = fhobby;
+	}
+	public String getFcountry() {
+		return fcountry;
+	}
+	public void setFcountry(String fcountry) {
+		this.fcountry = fcountry;
+	}
+	@Override
+	public String toString() {
+		return "user [fname=" + fname + ", fage=" + fage + ", femail=" + femail + ", fpswrd=" + fpswrd + ", fgender="
+				+ fgender + ", fhobby=" + fhobby + ", fcountry=" + fcountry + "]";
+	}
+	
+	
+	
+
+}
+
+package com.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.user;
+
+/**
+ * Servlet implementation class registerServlet
+ */
+public class registerServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public registerServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		user obj= (user) request.getAttribute("user");
+		PrintWriter out=response.getWriter();
+		out.println("your details "+obj);
+	}
+
+}
+
+
+CUSTOM tAG DEMO
+------------------------------------------------------
+
+
+package com;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
+
+public class PrintDateTag extends SimpleTagSupport{
+	
+	@Override
+	public void doTag() throws JspException, IOException {
+		
+		JspWriter out=getJspContext().getOut();
+	out.println("<h3>current date is : " + new SimpleDateFormat("dd-mm-yyyy hh:mm:ss :EEE").format(new Date())+"<h3>");
+		
+	}
+}
+
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+    "http://java.sun.com/j2ee/dtd/web-jsptaglibrary_1_2.dtd">
+
+	<taglib>
+
+  		<tlib-version>1.0</tlib-version>
+  		<jsp-version>1.2</jsp-version>
+ 	 	<short-name>st</short-name>
+ 	 	
+ 	 	<tag>
+			<name>MyDate</name>
+			<tag-class>com.PrintDateTag</tag-class>
+			<body-content>empty</body-content>
+		</tag>
+		
+		<tag>
+			<name>CustomDateTag</name>
+			<tag-class>com.CustomDate</tag-class>
+			<body-content>empty</body-content>
+			<attribute>
+				<name>format</name>
+				<required>true</required>
+				<rtexprvalue>true</rtexprvalue>
+			</attribute>
+		</tag>
+		
+		<tag>
+			<name>upper</name>
+			<tag-class>com.UpperCaseTag</tag-class>
+			<body-content>scriptless</body-content>
+			
+		</tag>
+	</taglib>
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%@taglib prefix="st" uri ="WEB-INF/mytags.tld"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<st:MyDate/>
+	<st:CustomDateTag format="dd-mm-yy"/>
+	<br>
+	<st:upper>will be displayed in uppercase</st:upper>
+</body>
+</html>
+
+package com;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
+
+public class CustomDate extends SimpleTagSupport{
+	
+	private String format;
+	
+	public void doTag() throws JspException, IOException {
+		JspWriter out=getJspContext().getOut();
+		out.println("<h3>current custom date is : " + new SimpleDateFormat(format).format(new Date())+"<h3>");
+	}
+	
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	
+
+}
+
+package com;
+
+import java.io.IOException;
+import java.io.StringWriter;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
+
+public class UpperCaseTag extends SimpleTagSupport{
+	@Override
+	public void doTag() throws JspException, IOException {
+		JspWriter out=getJspContext().getOut();
+		StringWriter sw = new StringWriter();
+		getJspBody().invoke(sw);
+		
+		out.println("<b>"+sw.toString().toUpperCase()+"<b>");
+	}
+
+}
